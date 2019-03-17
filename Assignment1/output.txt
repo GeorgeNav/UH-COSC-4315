@@ -1,0 +1,53 @@
+Input #1:
+---------
+Proposition			: Q
+Lexer				: [ ID ]
+Parser				: [ propositions, proposition, atomic, ID, more_propositions, epsilon ]
+
+Input #2:
+---------
+Proposition			: !Q
+Lexer				: [ NOT, ID ]
+Parser				: [ propositions, proposition, compound, NOT, proposition, atomic, ID, more_propositions, epsilon ]
+
+Input #3:
+---------
+Proposition			: )Q
+Lexer				: [ RPAR, ID ]
+ParserSyntaxError(s): 'invalid parentheses (line3,col1)' | 'invalid parenthesis' | 'TokenType ID not found after line0,col0'
+
+Input #4:
+---------
+Proposition			: P <=> Q
+Lexer				: [ ID, IFF, ID ]
+Parser				: [ propositions, proposition, compound, atomic, ID, connective, IFF, proposition, atomic, ID, more_propositions, epsilon ]
+
+Input #5:
+---------
+Proposition			: ( P /\ Q )
+Lexer				: [ LPAR, ID, AND, ID, RPAR ]
+Parser				: [ propositions, proposition, compound, LPAR, proposition, compound, atomic, ID, connective, AND, proposition, atomic, ID, RPAR, more_propositions, epsilon ]
+
+Input #6:
+---------
+Proposition			: !Q)P!
+Lexer				: [ NOT, ID, RPAR, ID, NOT ]
+ParserSyntaxError(s): 'invalid parentheses (line6,col3)' | 'invalid NOT symbol (line6,col5)' | 'invalid parenthesis'
+
+Input #7:
+---------
+Proposition			: ( P \/ Q ) , ( X => Y )
+Lexer				: [ LPAR, ID, OR, ID, RPAR, comma, LPAR, ID, IMPLIES, ID, RPAR ]
+Parser				: [ propositions, proposition, compound, LPAR, proposition, compound, atomic, ID, connective, OR, proposition, atomic, ID, RPAR, more_propositions, comma, propositions, proposition, compound, LPAR, proposition, compound, atomic, ID, connective, IMPLIES, proposition, atomic, ID, RPAR, more_propositions, epsilon ]
+
+Input #8:
+---------
+Proposition			: ( P \/ Q ) ( P )
+Lexer				: [ LPAR, ID, OR, ID, RPAR, LPAR, ID, RPAR ]
+ParserSyntaxError(s): 'expecting connective  (line8,col12)' | 'expecting connective  (line8,col10)'
+
+Input #9:
+---------
+Proposition			: Q /\ S /\ ( T /\ Q )
+Lexer				: [ ID, AND, ID, AND, LPAR, ID, AND, ID, RPAR ]
+Parser				: [ propositions, proposition, compound, atomic, ID, connective, AND, proposition, compound, atomic, ID, connective, AND, proposition, compound, LPAR, proposition, compound, atomic, ID, connective, AND, proposition, atomic, ID, RPAR, more_propositions, epsilon ]
