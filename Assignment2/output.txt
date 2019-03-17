@@ -1,0 +1,6 @@
+Input #1:
+---------
+Proposition			: P /\ !P
+Lexer				: [ P, AND, NOT, P ]
+is_sat				: False
+Parser				: [ propositions, proposition, compound, atomic, P, connective, AND, proposition, compound, NOT, proposition, atomic, P, more_propositions, epsilon ]

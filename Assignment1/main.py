@@ -2,8 +2,9 @@ import unittest
 import os
 from lexer import Lexer, TokenKind
 from parser import Parser
+from assertion import *
 
-#access input file
+# access input file
 dir_path = os.path.dirname(__file__)
 file_name = 'input.txt'
 input_file_path = os.path.join(dir_path, file_name)
@@ -20,6 +21,7 @@ with open(input_file_path) as f:
         c = f.read(1)
     # f_str = f.read()
 
+
 class Test(unittest.TestCase):
     def test(self):
         tokenlists = []
@@ -34,7 +36,7 @@ class Test(unittest.TestCase):
                 f.write('\n---------')
                 f.write('\nProposition\t\t\t: ')
                 f.write(f_lines[i].replace('\'', ''))
-                lexerouput = str(tokens).replace('\'', '').replace('[', '[ ').replace(']', ' ]')
+                lexerouput = str(tokens).replace('\'', '')
                 if tokens[0].kind is not None:
                     f.write('\nLexer\t\t\t\t: ')
                     f.write(lexerouput)
@@ -47,11 +49,17 @@ class Test(unittest.TestCase):
                 else:
                     f.write('\nSyntaxError(s)\t\t: ')
                     for i, invalidToken in enumerate(tokens):
-                        f.write(str(invalidToken) + ' (line ' + str(invalidToken.loc.line) + ', col '+ str(invalidToken.loc.col) + ')')
+                        f.write(
+                            str(invalidToken) +
+                            ' (line ' +
+                            str(invalidToken.loc.line) +
+                            ', col ' +
+                            str(invalidToken.loc.col) + ')')
                         if i+1 != len(tokens):
                             f.write(' | ')
                 if len(tokenlists)-1 != i:
                     f.write('\n\n')
+
         with open(output_file_path, 'r') as f:
             print(f.read())
 
