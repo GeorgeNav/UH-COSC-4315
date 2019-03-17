@@ -1,4 +1,4 @@
-tokens = [0,'1',2,3,4,5,6,False,7]
+tokens = [0, '1', 2, 3, 4, 5, 6, False, 7]
 lpar_index = 2
 rpar_index = 5
 first_part = tokens[0:lpar_index]
@@ -18,8 +18,8 @@ for token in tokens:
     else:
         print('Ouch')
 
-a = [1,2,3]
-a.append([3,4])
+a = [1, 2, 3]
+a.append([3, 4])
 print(a)
 
 a = []
