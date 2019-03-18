@@ -4,18 +4,18 @@ from lexer import Lexer, TokenKind, Token
 
 def calculate(tokens):
     postfix_tokens = get_postfix(tokens)
-    # print('Postfix: ' + str(postfix_tokens))
+    print('Postfix: ' + str(postfix_tokens))
     return arithmetic(postfix_tokens)
 
 
 def get_postfix(tokens):
     stack = []
     postfix = []
-    # print('Tokens: ' + str(tokens))
+    print('Tokens: ' + str(tokens))
 
     i = 0
     while(i < len(tokens)):
-        # print('Tokens: ' + str(tokens[i+1:]))
+        print('Tokens: ' + str(tokens[i+1:]))
         if tokens[i].kind == TokenKind.ID:
             postfix.append(Symbol(tokens[i].text))
             if len(stack) != 0 and stack[-1].kind == TokenKind.NOT:
@@ -36,8 +36,8 @@ def get_postfix(tokens):
                 p = precedence(
                     tokens[i], stack[-1] if len(stack) != 0 else None)
             stack.append(tokens[i])
-        # print('\tStack: ' + str(stack))
-        # print('\tOutput: ' + str(postfix) + '\n')
+        print('\tStack: ' + str(stack))
+        print('\tOutput: ' + str(postfix) + '\n')
         i += 1
 
     while(len(stack) != 0):
@@ -80,8 +80,8 @@ def arithmetic(tokens):
 
     i = 0
     while(i < len(tokens)):
-        # print('\n' + str(tokens[i:]) + ' -> Token: ' + str(tokens[i]))
-        # print('Stack: ' + str(stack) + '\n')
+        print('\n' + str(tokens[i:]) + ' -> Token: ' + str(tokens[i]))
+        print('Stack: ' + str(stack) + '\n')
         if isinstance(tokens[i], Token):
             if tokens[i].kind == TokenKind.NOT:
                 stack.append(Not(stack.pop()))
@@ -97,10 +97,10 @@ def arithmetic(tokens):
                 elif tokens[i].kind == TokenKind.IFF:
                     stack.append(Iff(a, b))
         else:
-            # print('\t' + str(stack) + ' <- ' + str(tokens[i]))
+            print('\t' + str(stack) + ' <- ' + str(tokens[i]))
             stack.append(tokens[i])
         i += 1
-    print('Ending Stack: ' + str(stack).replace('[', '').replace(']', ''),)
+    print('Ending Stack: ' + str(stack[-1]))
     if len(stack) == 1:
         return is_sat(stack[-1])
     else:
