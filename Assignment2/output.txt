@@ -1,6 +1,49 @@
 Input #1:
 ---------
-Proposition			: P /\ !P
-Lexer				: [P, AND, NOT, P]
-is_sat				: False
-Parser				: [ propositions, proposition, compound, atomic, P, connective, AND, proposition, compound, NOT, proposition, atomic, P, more_propositions, epsilon ]
+Proposition			: Q
+Lexer				: [ Q ]
+Parser				: [ propositions, proposition, atomic, Q, more_propositions, epsilon ]
+is_sat				: True <- Q
+
+Input #2:
+---------
+Proposition			: Q /\!Q
+Lexer				: [ Q, AND, NOT, Q ]
+Parser				: [ propositions, proposition, compound, atomic, Q, connective, AND, proposition, compound, NOT, proposition, atomic, Q, more_propositions, epsilon ]
+is_sat				: False <- (Q & (! Q))
+
+Input #3:
+---------
+Proposition			: P <=> Q
+Lexer				: [ P, IFF, Q ]
+Parser				: [ propositions, proposition, compound, atomic, P, connective, IFF, proposition, atomic, Q, more_propositions, epsilon ]
+is_sat				: True <- (P <-> Q)
+
+Input #4:
+---------
+Proposition			: ( (P /\ !Q ))
+Lexer				: [ LPAR, LPAR, P, AND, NOT, Q, RPAR, RPAR ]
+Parser				: [ propositions, proposition, compound, LPAR, proposition, compound, LPAR, proposition, compound, atomic, P, connective, AND, proposition, compound, NOT, proposition, atomic, Q, RPAR, RPAR, more_propositions, epsilon ]
+is_sat				: True <- (P & (! Q))
+
+Input #5:
+---------
+Proposition			: ( P \/ Q ), !( X => Y ), P /\ !Q <=> P \/ !(P => !Q), P /\ !P
+Lexer				: [ LPAR, P, OR, Q, RPAR, comma, NOT, LPAR, X, IMPLIES, Y, RPAR, comma, P, AND, NOT, Q, IFF, P, OR, NOT, LPAR, P, IMPLIES, NOT, Q, RPAR, comma, P, AND, NOT, P ]
+Parser				: [ propositions, proposition, compound, LPAR, proposition, compound, atomic, P, connective, OR, proposition, atomic, Q, RPAR, more_propositions, comma, propositions, proposition, compound, NOT, proposition, compound, LPAR, proposition, compound, atomic, X, connective, IMPLIES, proposition, atomic, Y, RPAR, more_propositions, comma, propositions, proposition, compound, atomic, P, connective, AND, proposition, compound, NOT, proposition, compound, atomic, Q, connective, IFF, proposition, compound, atomic, P, connective, OR, proposition, compound, NOT, proposition, compound, LPAR, proposition, compound, atomic, P, connective, IMPLIES, proposition, compound, NOT, proposition, atomic, Q, RPAR, more_propositions, comma, propositions, proposition, compound, atomic, P, connective, AND, proposition, compound, NOT, proposition, atomic, P, more_propositions, epsilon ]
+is_sat				: False <- ((P | Q) & ((! (X -> Y)) & (((... & ...) <-> (... | ...)) & (P & (! ...)))))
+
+Input #6:
+---------
+Proposition			: P /\ !Q, !P<=>!Q
+Lexer				: [ P, AND, NOT, Q, comma, NOT, P, IFF, NOT, Q ]
+Parser				: [ propositions, proposition, compound, atomic, P, connective, AND, proposition, compound, NOT, proposition, atomic, Q, more_propositions, comma, propositions, proposition, compound, NOT, proposition, compound, atomic, P, connective, IFF, proposition, compound, NOT, proposition, atomic, Q, more_propositions, epsilon ]
+is_sat				: False <- ((P & (! Q)) & ((! P) <-> (! Q)))
+
+Input #7:
+---------
+Proposition			: P /\ Q => P
+Lexer				: [ P, AND, Q, IMPLIES, P ]
+Parser				: [ propositions, proposition, compound, atomic, P, connective, AND, proposition, compound, atomic, Q, connective, IMPLIES, proposition, atomic, P, more_propositions, epsilon ]
+is_sat				: True <- ((P & Q) -> P)
+

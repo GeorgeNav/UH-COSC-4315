@@ -59,15 +59,15 @@ def precedence(token, stack_top):
 
     s_t = -1
     if stack_top is not None:
-        if stack_top.kind == TokenKind.LPAR:
+        if stack_top.kind == TokenKind.AND:
             s_t = 1
-        elif stack_top.kind == TokenKind.AND:
-            s_t = 2
         elif stack_top.kind == TokenKind.OR:
-            s_t = 3
+            s_t = 2
         elif stack_top.kind == TokenKind.IMPLIES:
-            s_t = 4
+            s_t = 3
         elif stack_top.kind == TokenKind.IFF:
+            s_t = 4
+        elif stack_top.kind == TokenKind.LPAR:
             s_t = 5
     else:
         return False
@@ -102,6 +102,6 @@ def arithmetic(tokens):
         i += 1
     print('Ending Stack: ' + str(stack[-1]))
     if len(stack) == 1:
-        return is_sat(stack[-1])
+        return str(is_sat(stack[-1])) + ' <- ' + str(stack[-1])
     else:
         raise NotImplementedError

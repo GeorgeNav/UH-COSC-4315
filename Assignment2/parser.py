@@ -41,22 +41,25 @@ class Parser:
                 if wrappers > 0:
                     self.error('invalid parentheses', token)
                 elif(i-1 >= 0 and
-                     self.tokenlist[i-1].kind != TokenKind.COMMA and not
-                     self.is_connective(self.tokenlist[i-1].kind)):
-                    self.error('expecting connective ', self.tokenlist[i-1])
+                     (self.tokenlist[i-1].kind != TokenKind.COMMA and
+                      not self.is_connective(self.tokenlist[i-1].kind) and
+                      self.tokenlist[i-1].kind != TokenKind.NOT and
+                      self.tokenlist[i-1].kind != TokenKind.LPAR)):
+                    self.error('expecting connective, not, or comma', self.tokenlist[i-1])
             elif token.kind == TokenKind.RPAR:
                 wrappers += 1
                 if wrappers > 0:
                     self.error('invalid parentheses', token)
                 elif(len(self.tokenlist) > i+1 and
-                     self.tokenlist[i+1].kind != TokenKind.COMMA and not
-                     self.is_connective(self.tokenlist[i+1].kind)):
+                     self.tokenlist[i+1].kind != TokenKind.COMMA and
+                     not self.is_connective(self.tokenlist[i+1].kind) and
+                     self.tokenlist[i+1].kind != TokenKind.RPAR):
                     self.error('expecting connective ', self.tokenlist[i+1])
             elif token.kind == TokenKind.NOT:
                 if(i+1 == len(self.tokenlist) or
-                   i+1 < len(self.tokenlist) and
-                   self.tokenlist[i+1].kind != TokenKind.LPAR and
-                   self.tokenlist[i+1].kind != TokenKind.ID):
+                   (i+1 < len(self.tokenlist) and
+                    self.tokenlist[i+1].kind != TokenKind.LPAR and
+                    self.tokenlist[i+1].kind != TokenKind.ID)):
                     self.error('invalid NOT symbol', token)
         if wrappers != 0 and 'invalid parentheses' not in self.errors:
             self.error('invalid parenthesis', None)

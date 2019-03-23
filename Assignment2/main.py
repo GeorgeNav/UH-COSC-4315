@@ -3,6 +3,7 @@ import os
 from lexer import Lexer, TokenKind
 from parser import Parser
 from assertion import *
+from pprint import pprint
 
 # access input file
 dir_path = os.path.dirname(__file__)
@@ -36,18 +37,41 @@ class Test(unittest.TestCase):
                 f.write('\n---------')
                 f.write('\nProposition\t\t\t: ')
                 f.write(f_lines[i].replace('\'', ''))
-                lexerouput = str(tokens).replace('\'', '')
+                lexer_output = str(tokens).replace('\'', '')
                 if tokens[0].kind is not None:
                     f.write('\nLexer\t\t\t\t: ')
-                    f.write(lexerouput)
-                    bool_val = calculate(tokens)
-                    f.write('\nis_sat\t\t\t\t: ' + str(bool_val))
+                    f.write(lexer_output.replace('[', '[ ').replace(']', ' ]'))
                     try:
-                        tokens = Parser(tokens).parse()
+                        parse_tree = Parser(tokens[:]).parse()
                         f.write('\nParser\t\t\t\t: ')
-                        f.write(str(tokens).replace('\'', ''))
+                        f.write(str(parse_tree).replace('\'', ''))
+                        
+                        more_propositions = []
+                        i = 0
+                        for j, token in enumerate(tokens):
+                            if token.kind == TokenKind.COMMA:
+                                more_propositions.append(
+                                    [Token(None, TokenKind.LPAR, 'LPAR')] +
+                                    tokens[i:j] +
+                                    [Token(None, TokenKind.RPAR, 'RPAR')])
+                                i = j+1
+                        more_propositions.append(
+                            [Token(None, TokenKind.LPAR, 'LPAR')] +
+                            tokens[i:] +
+                            [Token(None, TokenKind.RPAR, 'RPAR')])
+                        pprint(str(more_propositions).replace('\'', ''))
+                        
+                        new_tokens = []
+                        for i, row in enumerate(more_propositions):
+                            new_tokens += row
+                            if i+1 != len(more_propositions):
+                                new_tokens += [Token(None, TokenKind.AND, 'AND')]
+                        pprint(str(new_tokens).replace('\'', ''))
+
+                        s = calculate(new_tokens)
+                        f.write('\nis_sat\t\t\t\t: ' + str(s))
                     except Exception as e:
-                        f.write('\nParserSyntaxError(s): ' + str(e))
+                        f.write('\nParserSyntaxError(s)\t\t: ' + str(e))
                 else:
                     f.write('\nSyntaxError(s)\t\t: ')
                     for i, invalidToken in enumerate(tokens):
